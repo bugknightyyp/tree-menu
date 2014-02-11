@@ -1,0 +1,21 @@
+{
+  "name": "tree-menu",
+  "version": "1.0.0",
+  "homepage": "https://github.com/bugknightyyp/tree-menu",
+  "authors": [
+    "bugknightyyp <bugknightyyp@gmail.com>"
+  ],
+  "description": "infinite hierarchical menu",
+  "main": "src/tree-menu.js",
+  "keywords": [
+    "jquery-plugin",
+    "tree-menu"
+  ],
+  "license": "MIT",
+  "dependencies": {
+    "jquery": "1.11.0"
+  },
+  "optionalDependencies": {
+    "font-awesome": "*"
+  }
+}
