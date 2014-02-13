@@ -4,7 +4,8 @@
     defaults = {
         toggle: true,
         arrawControlClose: 'fa fa-angle-left',
-        arrawControlOpen: 'fa fa-angle-down'
+        arrawControlOpen: 'fa fa-angle-down',
+        arrawControlOn: 'fa  fa-caret-left'
     };
       
   function TreeMenuFactory(element, options) {
@@ -46,6 +47,8 @@
           
         }
         
+        var currenItem = null;
+        
         _element.on('click', 'li > a', function(e){
           var self = $(this);
           var elUl = self.next();
@@ -63,6 +66,10 @@
           if (elUl.length) {
             e.preventDefault();
             switchState(self, elUl);
+          } else {
+            currenItem && currenItem.children('i').remove();
+            self.append('<i class="'+ _this.settings.arrawControlOn +'"></i>');
+            currenItem  = self;
           }
           
         });
