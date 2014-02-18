@@ -9,10 +9,18 @@
     };
       
   function TreeMenuFactory(element, options) {
+    var selectedNode = null;
+    
     this.element = element;
     this.settings = $.extend({}, defaults, options);
     this._defaults = defaults;
     this._name = pluginName;
+    this.getSelectedNode = function(){
+      return selectedNode;
+    };
+    this.setSelectedNode = function(node){
+        selectedNode = node;
+    };
     this.init();
   }
 
@@ -20,15 +28,29 @@
       init: function () {
 
         var _this = this,
-            _element = $(this.element);
-            
-        _element.find('li').each(function(index, item){
+            root = $(this.element),
+            locationHref = location.href.match(/[^?]+/)[0];
+            isMathMenuHref = false;
+        
+        //init state
+        root.find('li').each(function(index, item){
           var self = $(item);
+          var aNode = self.find('> a');
+          var className =  _this.settings.arrawControlClose;
+          
           if (self.has('> ul').length) {
-            self.find('> a')
-              .append('<i class="'+ _this.settings.arrawControlClose +'"></i>')
-              .end().find('> ul').hide();
-          }
+              self.find('> ul').hide();
+              aNode.append('<i class="'+ className +'"></i>');
+          } else if (aNode.attr("href").match(/[^?]+/)[0] == locationHref) {
+                className = _this.settings.arrawControlOn;
+                _this.setSelectedNode(aNode);
+                aNode.append('<i class="'+ className +'"></i>');
+                isMathMenuHref = true;
+            } 
+          
+            
+              
+          
         });
                 
         
@@ -46,10 +68,9 @@
           
           
         }
+       
         
-        var currenItem = null;
-        
-        _element.on('click', 'li > a', function(e){
+        root.on('click', 'li > a', function(e){
           var self = $(this);
           var elUl = self.next();
           
@@ -67,12 +88,29 @@
             e.preventDefault();
             switchState(self, elUl);
           } else {
-            currenItem && currenItem.children('i').remove();
+            var temp = _this.getSelectedNode();
+            if (temp) {
+              temp.children('i').remove();
+            }
             self.append('<i class="'+ _this.settings.arrawControlOn +'"></i>');
-            currenItem  = self;
+            _this.setSelectedNode(self);
           }
           
         });
+        
+        if (isMathMenuHref) {
+          _this.locationToEnd(_this.getSelectedNode());
+        } 
+      },
+      locationToEnd: function(aNode){ //path : 1/2
+       /* var _this = this,
+            root = $(this.element),
+            cssPath = '';
+        $.each(path.split('/'), function(index, item){
+          cssPath += ('>ul > li:nth-of-type('+ item +') ');
+        });
+        root.find('li:nth-of-type(1)')*/
+        aNode.parentsUntil($(this.element), "ul").show();
       }
   };
 
